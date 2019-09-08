@@ -2,9 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://liaohuming.com/2016/08/18/notes/20170829-What%20does%20arg%20inf%20sup%20mean/</loc>
+    
+    <lastmod>2019-09-08T03:35:45.563Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://liaohuming.com/2018/03/06/diary/20180306-%E5%A4%A7%E9%81%93%E5%B9%B3%E7%9B%B4%E5%8A%AA%E5%8A%9B%E5%90%91%E5%89%8D/</loc>
     
-    <lastmod>2019-09-08T03:05:43.506Z</lastmod>
+    <lastmod>2019-09-08T03:35:06.305Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2017/09/06/notes/20170906-Apache%E5%AE%89%E8%A3%85%E6%97%A5%E5%BF%97/</loc>
+    
+    <lastmod>2019-09-08T03:33:45.798Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2017/10/19/notes/20171019-%E6%98%BE%E5%BC%8F%E6%97%B6%E9%97%B4%E7%A7%AF%E5%88%86%E4%B8%8E%E9%9A%90%E5%BC%8F%E6%97%B6%E9%97%B4%E7%A7%AF%E5%88%86/</loc>
+    
+    <lastmod>2019-09-08T03:32:44.717Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2017/05/16/notes/20170516-Linux%E4%B8%8B%E5%AE%89%E8%A3%85openmpi/</loc>
+    
+    <lastmod>2019-09-08T03:29:26.520Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2016/09/02/notes/20160902-Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%A4%87%E5%BF%98%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/</loc>
+    
+    <lastmod>2019-09-08T03:27:13.557Z</lastmod>
     
   </url>
   
@@ -51,6 +86,13 @@
   </url>
   
   <url>
+    <loc>http://liaohuming.com/2016/02/18/notes/20160218-Windows%E4%B8%8ELinux%E4%B8%A4%E7%A7%8D%E6%A0%BC%E5%BC%8F%E6%96%87%E4%BB%B6%E7%9B%B8%E4%BA%92%E8%BD%AC%E5%8C%96%E9%97%AE%E9%A2%98%E7%9A%84%E7%AE%80%E5%8D%95%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
+    
+    <lastmod>2017-12-18T08:55:05.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://liaohuming.com/2016/02/01/notes/20160201-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%A4%9A%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90%E6%97%B6getopt()%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E5%B0%8F%E7%BB%93/</loc>
     
     <lastmod>2017-12-13T01:36:22.078Z</lastmod>
@@ -58,9 +100,65 @@
   </url>
   
   <url>
+    <loc>http://liaohuming.com/2019/09/08/notes/20171212-Linux%E4%B8%8B%E5%AE%89%E8%A3%85paraview%E5%92%8Ctotalview%E6%97%A5%E5%BF%97/</loc>
+    
+    <lastmod>2017-12-12T07:43:04.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2019/09/08/notes/20170515-Linux%E4%B8%8B%E5%AE%89%E8%A3%85mpich/</loc>
+    
+    <lastmod>2017-05-15T16:59:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2017/04/19/notes/20170419-%E7%BC%96%E7%A8%8B%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%B0%8F%E9%94%99%E8%AF%AF/</loc>
+    
+    <lastmod>2017-04-19T08:36:00.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2016/02/08/notes/20160208-Linux%E4%B8%8B%E6%89%B9%E9%87%8F%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95%E7%AE%97%E4%BE%8B%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E4%B8%80%EF%BC%89/</loc>
+    
+    <lastmod>2017-01-11T02:01:37.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2016/12/09/notes/20161209-Red%20hat%20%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2016-12-11T12:58:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2016/08/22/notes/20160822-Linux%E4%B8%8B%E6%89%B9%E9%87%8F%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95%E7%AE%97%E4%BE%8B%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
+    
+    <lastmod>2016-08-31T03:14:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://liaohuming.com/2016/02/05/diary/20160206-%E5%85%B3%E4%BA%8E%E8%AF%BB%E4%B9%A6%E7%9A%84%E9%9A%8F%E6%83%B3/</loc>
     
     <lastmod>2016-07-29T04:10:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2016/02/13/notes/20160213-Aero%20Engine,%20How%20it%20works-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</loc>
+    
+    <lastmod>2016-07-28T02:42:58.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://liaohuming.com/2011/03/24/notes/20110324-UG%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E4%B8%AD%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E3%80%81UG%E7%89%88%E6%9C%AC%E3%80%81%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E7%AD%89%E9%97%AE%E9%A2%98%E5%8F%8A%E5%AE%9E%E4%BE%8B/</loc>
+    
+    <lastmod>2016-07-28T02:42:58.000Z</lastmod>
     
   </url>
   
@@ -79,7 +177,7 @@
   </url>
   
   <url>
-    <loc>http://liaohuming.com/2011/03/24/notes/20110324-UG%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E4%B8%AD%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E3%80%81UG%E7%89%88%E6%9C%AC%E3%80%81%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E7%AD%89%E9%97%AE%E9%A2%98%E5%8F%8A%E5%AE%9E%E4%BE%8B/</loc>
+    <loc>http://liaohuming.com/2016/02/27/notes/20160227-Airplane,%20How%20does%20it%20fly-%E8%88%AA%E7%A9%BA%E9%A3%9E%E6%9C%BA%E9%A3%9E%E8%A1%8C%E5%8E%9F%E7%90%86/</loc>
     
     <lastmod>2016-07-28T02:42:58.000Z</lastmod>
     
