@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>To Be Better</title>
+  <title>Keep To Be Better</title>
   
-  <subtitle>The journey of a thousand miles begins with a single step. Keep thinking, and keep writing.</subtitle>
+  <subtitle>好记性不如烂笔头</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://liaohuming.com/"/>
-  <updated>2019-09-08T05:01:51.832Z</updated>
+  <updated>2020-02-22T13:41:13.916Z</updated>
   <id>http://liaohuming.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Windows系统下采用命令行编译C++ MPI程序</title>
+    <link href="http://liaohuming.com/2020/02/22/notes/20200222-Windows%E7%B3%BB%E7%BB%9F%E4%B8%8B%E9%87%87%E7%94%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91C++%20MPI%E7%A8%8B%E5%BA%8F/"/>
+    <id>http://liaohuming.com/2020/02/22/notes/20200222-Windows系统下采用命令行编译C++ MPI程序/</id>
+    <published>2020-02-22T12:34:05.000Z</published>
+    <updated>2020-02-22T13:41:13.916Z</updated>
+    
+    <content type="html"><![CDATA[<p>##目的<br>目标程序比较大，之前主要是在Liunx下进行程序的开发、编译与使用，现在想在Windows下进行开发、编译与使用。为了实现跨平台，程序的编译过程不宜采用Visual Studio IDE建立的Solution进行编译，否则更换编译器时，VS的Soultion就用不了了。</p><p>理想的方式是自己编写程序编译的脚本文件，采用命令行编译的方式，程序使用的开发语言是C++，并采用MPI进行并行化。为此，本文记录如何在Windows系统下采用命令行编译C++ MPI程序。</p><p>##<a href="https://blog.csdn.net/leonliu06/article/details/78229534" target="_blank" rel="noopener">C++ 编译过程</a><br>一般而言，对于 C++ 程序编译有以下4个阶段：</p><p>*预处理（preprocessing）<br>对源程序中的伪指令（以#开头的指令）和特殊符号进行处理。伪指令包括宏定义、条件编译指令、头文件包含指令等。</p><p>*编译（compilation）<br>将预处理后的文件编译生成后缀为.s的汇编语言文件，。编译程序所要做的工作是通过记法分析和语法分析，在确认所有指令都符合语法规则后，将其翻译成等价的中间代码或汇编代码。</p><p>*汇编（assembly）<br>将汇编文件汇编生成后缀为.o的目标文件（二进制）。汇编过程实际上是指把汇编语言代码翻译成目标机器指令的过程。</p><p>*链接（linking）<br>将多个目标文件和库连接生成后缀为.out或.exe的可执行文件。链接程序的主要工作就是将有关的目标文件彼此相连接，即将在一个文件中引用的符号现该符号在另外一个文件中的定义连接起来，使得所有的这些目标文件成为一个能够被操作系统装入执行的统一整体。</p><p>*链接处理<br>静态链接（static linking）:指链接器在链接时将库（静态库）的内容拷贝到可执行程序中。<br>动态链接（dynamic linking）:指程序运行时才将库（动态链接库）连接到程序中。</p><p>##环境</p><ol><li>Windows 10 操作系统</li><li>安装Visual Studio Professional 2017</li><li>安装MSMPI，安装路径为：<code>D:\Program Files (x86)</code></li><li>目标程序版本：x64</li></ol><p>##编译方法</p><ol><li>方法一：Visual Studio Professional 2017 IDE环境下的编译，详见<a href="https://blog.csdn.net/hsajas/article/details/80103414" target="_blank" rel="noopener">VS2017配置MPI</a>文章介绍</li><li>方法二：命令行编译C++ MPI程序。参考：<a href="https://stackoverflow.com/questions/50195657/how-to-compile-and-run-c-c-mpi-codes-in-cmd-on-windows-without-visual-studio" target="_blank" rel="noopener">How to compile and run C/C++ MPI codes in cmd on windows without Visual Studio</a></li></ol><p>具体步骤为：</p><ol><li><p>建立一个简单的mpi c++代码，如：MpiHelloWorld.cpp，并保存，例如：E:\Desktop\MPI_Test\MpiHelloWorld.cpp，接下来就采用命令行对此源代码进行编译</p><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#include<span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#include<span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[]) &#123;</span><br><span class="line">    <span class="keyword">int</span> myid, numprocs;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">MPI_Init</span>(&amp;argc, &amp;argv);</span><br><span class="line">    <span class="built_in">MPI_Comm_rank</span>(<span class="built_in">MPI_COMM_WORLD</span>, &amp;myid);</span><br><span class="line">    <span class="built_in">MPI_Comm_size</span>(<span class="built_in">MPI_COMM_WORLD</span>, &amp;numprocs);</span><br><span class="line"></span><br><span class="line">    printf(<span class="string">"%d Hello world from process %d \n"</span>, numprocs, myid);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">MPI_Finalize</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>打开开始菜单中的<code>x64 Native Tools Command Prompt for VS 2017</code>工具，用vs自动的命令行工具，可以方便地调用cl.exe和link.exe，如果不想用vs自带的命令行工具，也可以使用windows原始的cmd命令行工具，不过这种情况下需要自己手动定义好vs的引用目录和库文件目录的环境变量。此处采用的是vs提供的命令行工具。<br><img src="/img/20200222-1.jpg" alt=""></p></li><li><p>切换至MpiHelloWorld.cpp文件所在目录</p></li></ol><p>首先编译，在该目录下执行以下命令：<br><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl -I"D:<span class="symbol">\P</span>rogram Files (x86)<span class="symbol">\M</span>icrosoft SDKs<span class="symbol">\M</span>PI<span class="symbol">\I</span>nclude" -I"D:<span class="symbol">\P</span>rogram Files (x86)<span class="symbol">\M</span>icrosoft SDKs<span class="symbol">\M</span>PI<span class="symbol">\I</span>nclude<span class="symbol">\x</span>64" -c MPIHelloWorld.cpp</span><br></pre></td></tr></table></figure></p><p>其中，cl为cl.exe编译器，-I（大写的i）表示指定第一个寻找头文件的目录（如果指定多个目录，则使用多个-I），在本例中要将MPI的两个Include目录包含进去。-c表示只编译不链接。编译完之后可以看到当前目录下生成了MPIHelloWorld.obj汇编文件<br><img src="/img/20200222-2.jpg" alt=""></p><p>然后链接，在该目录下执行以下命令：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">link</span> <span class="selector-tag">-machine</span><span class="selector-pseudo">:x64</span> <span class="selector-tag">-out</span><span class="selector-pseudo">:MpiHelloWorld.exe</span> <span class="selector-tag">-dynamicbase</span> "<span class="selector-tag">msmpi</span><span class="selector-class">.lib</span>" <span class="selector-tag">-libpath</span><span class="selector-pseudo">:"D</span>:\<span class="selector-tag">Program</span> <span class="selector-tag">Files</span> (<span class="selector-tag">x86</span>)\<span class="selector-tag">Microsoft</span> <span class="selector-tag">SDKs</span>\<span class="selector-tag">MPI</span>\<span class="selector-tag">Lib</span>\<span class="selector-tag">x64</span>" <span class="selector-tag">MPIHelloWorld</span><span class="selector-class">.obj</span></span><br></pre></td></tr></table></figure></p><p>其中，link为link.exe链接器，-machine:x64表示x64版本，-out表示指定输出文件名，-dynamicbase表示包含附加依赖项msmpi.lib，而-libpath表示设置库目录，最后MPIHelloWorld.obj表示要链接的汇编文件。链接完之后可以看到当前目录下生成了MPIHelloWorld.exe可执行文件<br><img src="/img/20200222-3.jpg" alt=""></p><p>最后，执行该程序，例如本例中采用10个核<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">mpiexec</span> <span class="selector-tag">-n</span> 10 <span class="selector-tag">MPIHelloWorld</span><span class="selector-class">.exe</span></span><br></pre></td></tr></table></figure></p><p><img src="/img/20200222-4.jpg" alt=""></p><p>至此，完成了Windows系统下采用命令行编译C++ MPI程序，参考此编译过程，可以将其应用到复杂的程序编译过程中，此是后话了。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;##目的&lt;br&gt;目标程序比较大，之前主要是在Liunx下进行程序的开发、编译与使用，现在想在Windows下进行开发、编译与使用。为了实现跨平台，程序的编译过程不宜采用Visual Studio IDE建立的Solution进行编译，否则更换编译器时，VS的Soultion
+      
+    
+    </summary>
+    
+      <category term="笔记" scheme="http://liaohuming.com/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="C++" scheme="http://liaohuming.com/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>大道平直，努力向前</title>
@@ -479,32 +504,6 @@
         &lt;p&gt;乘火车，春运&lt;br&gt;一朋友发消息，关心问道，吃了吗？&lt;/p&gt;
 &lt;p&gt;从中午到傍晚&lt;br&gt;来来回回的小推车&lt;br&gt;也竟然只有瓜子水和水果&lt;br&gt;餐车也堵得可望不可及&lt;/p&gt;
 &lt;p&gt;我便毫不夸张地如是回之&lt;br&gt;怎奈朋友来了一通&lt;br&gt;这什么车啊，这么不人性……&lt;br&gt;我真想说
-      
-    
-    </summary>
-    
-      <category term="随笔" scheme="http://liaohuming.com/categories/%E9%9A%8F%E7%AC%94/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>生活是美好的</title>
-    <link href="http://liaohuming.com/2012/01/30/diary/20120130-%E7%94%9F%E6%B4%BB%E6%98%AF%E7%BE%8E%E5%A5%BD%E7%9A%84/"/>
-    <id>http://liaohuming.com/2012/01/30/diary/20120130-生活是美好的/</id>
-    <published>2012-01-30T15:46:50.000Z</published>
-    <updated>2019-09-08T04:06:04.344Z</updated>
-    
-    <content type="html"><![CDATA[<p>春节在家的这几天<br>很累，很不方便，洗个澡跟打场战似的</p><p>特别是哥哥初四回京后<br>我独自一人在家交际应酬</p><p>几乎就没有清醒的时候<br>几天下来，想办的事情，一件没办好<br>刚刚还因为喝醉了要安装饮水机，结果把过滤器摔碎了</p><p>无论怎么的不完美<br>在家的这些天，妈妈是很开心的，还有什么比这个更重要的呢？</p><p>也有，实质性的改善<br>家里的电路，一楼二楼都重装过了<br>债务也在哥哥的努力下已经还清了<br>房子也不漏雨了<br>……</p><p>明天，就要走了</p><p>大晚上的，刚刚永珍舅母，特意上来，给我送了一个红包<br>说，白天的时候来过了，但是家里没人<br>说，同一辈的兄弟，就属我最小了</p><p>前天，在永辉舅家喝酒，招招舅母，给我一个红包<br>说，明，别嫌舅母给的少</p><p>我是从来抵触这些的，但是这次，我欣然接受<br>我知道，你们是真的高兴</p><p>昨天，在马六哥家喝酒<br>马六哥说，前几年出事，赔了很多钱，现在还欠着近20万<br>现在开车，一年苦下来，利润有个四五万<br>30了，别人问，都只回答，比去年大一岁，酒后的他，哽咽道。</p><p>事实的残酷，现实的无奈</p><p>我回忆，小时候三兄弟在菜地里拔草，一起疯狂砍别人菜，最后吓得不敢回家的傻事<br>马六哥高兴的叫道，小时去炳炳姨家做客，天下雨，马六哥背着我，然后我和哥哥闹着，一路捡瓶子盖玩<br>……</p><p>我不会忘记的<br>日子，会越来越好过的</p><p>这次回家，感觉特别的温暖<br>终归是一家人，无论以前家庭之间有多大的矛盾<br>真的，都特别的渺小<br>在家里最困难的时候，来帮助我们的总是你们</p><p>现在看到，两个外甥，争气有骨气<br>我知道，你们打心底也是高兴的</p><p>明早，回北京了</p><p>脚边，安静的睡着可爱的，小灰灰和小黑黑<br>再回来的时候，你们还记得我吗？</p><p>晚安，妈妈。<br>晚安，古田。</p><p>2012年1月30日<br>于古田</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;春节在家的这几天&lt;br&gt;很累，很不方便，洗个澡跟打场战似的&lt;/p&gt;
-&lt;p&gt;特别是哥哥初四回京后&lt;br&gt;我独自一人在家交际应酬&lt;/p&gt;
-&lt;p&gt;几乎就没有清醒的时候&lt;br&gt;几天下来，想办的事情，一件没办好&lt;br&gt;刚刚还因为喝醉了要安装饮水机，结果把过滤器摔碎了&lt;/p&gt;
-&lt;p&gt;无
       
     
     </summary>
