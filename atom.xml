@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Keep To Be Better</title>
+  <title>Keep getting better</title>
   
   <subtitle>好记性不如烂笔头</subtitle>
   <link href="/atom.xml" rel="self"/>
@@ -10,7 +10,7 @@
   <id>http://liaohuming.com/</id>
   
   <author>
-    <name>liaohuming</name>
+    <name>廖祜明</name>
     
   </author>
   
