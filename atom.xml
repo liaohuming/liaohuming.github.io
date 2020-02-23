@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://liaohuming.com/"/>
-  <updated>2020-02-22T14:31:07.577Z</updated>
+  <updated>2020-02-23T03:23:18.842Z</updated>
   <id>http://liaohuming.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Latex测试</title>
+    <link href="http://liaohuming.com/2020/02/23/notes/20200223-Latex%E6%B5%8B%E8%AF%95/"/>
+    <id>http://liaohuming.com/2020/02/23/notes/20200223-Latex测试/</id>
+    <published>2020-02-23T03:21:50.000Z</published>
+    <updated>2020-02-23T03:23:18.842Z</updated>
+    
+    <content type="html"><![CDATA[<p>$$\beta=3\times \omega$$</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;$$\beta=3\times \omega$$&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+      <category term="笔记" scheme="http://liaohuming.com/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="C++" scheme="http://liaohuming.com/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>Windows系统下采用命令行编译C++ MPI程序</title>
@@ -479,31 +505,6 @@
         &lt;p&gt;总是在病痛的时候才想起健康的重要，&lt;br&gt;也总是在病痛的时候方才意识到自己是多么的脆弱，&lt;br&gt;我的脆弱则体现在从小到大我总是不断的生病不断的生病。&lt;/p&gt;
 &lt;p&gt;这几天总是噩梦连连，&lt;br&gt;每天早上起来，对着镜中的自己，笑笑。&lt;br&gt;新的一天，多美好。&lt;/p&gt;
 &lt;p&gt;如果
-      
-    
-    </summary>
-    
-      <category term="随笔" scheme="http://liaohuming.com/categories/%E9%9A%8F%E7%AC%94/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>我真想说你XX</title>
-    <link href="http://liaohuming.com/2012/01/31/diary/20120131-%E6%88%91%E7%9C%9F%E6%83%B3%E8%AF%B4%E4%BD%A0/"/>
-    <id>http://liaohuming.com/2012/01/31/diary/20120131-我真想说你/</id>
-    <published>2012-01-31T12:47:31.000Z</published>
-    <updated>2016-07-28T02:42:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>乘火车，春运<br>一朋友发消息，关心问道，吃了吗？</p><p>从中午到傍晚<br>来来回回的小推车<br>也竟然只有瓜子水和水果<br>餐车也堵得可望不可及</p><p>我便毫不夸张地如是回之<br>怎奈朋友来了一通<br>这什么车啊，这么不人性……<br>我真想说你XX……</p><p>简单的说<br>是把列车以及其服务数落了一顿<br>顺带也把我数落了一顿</p><p>真是躺着也能中枪<br>虽然此时我已是饿得意识模糊了<br>但我心态是很好的<br>被这么一顿骂，顿时觉得挺饱的</p><p>只是<br>你是特地来骂我的吗<br>我想应该是知道我的行程，来关问我的</p><p>可如何第二句就转变成责骂了呢<br>联想到在现实中，如斯情况，实是不乏<br>噢，不对，不用联想，我这就是了</p><p><strong>如果你本意是去做一件事情，那就绝不要将其做成另一件</strong></p><p>我们原本是好意去做一件事，可却达到了相反的效果，自己还不知道，这是很可怕的<br>“我真想说你XX ……”<br>手法真挫劣，分明都已经说了，还假惺惺的用“真想”来掩饰</p><p><strong>不要一旦有机会便肆无忌惮地放纵那颗批判的心与优越的正义感</strong></p><p>还是回到，我提供给朋友的，半天没在春运列车上买到泡面和盒饭的信息<br>仅一句话，就殃及多少无辜，“不人性，你真XX，不可思议……”</p><p>我正愤愤的想着怎么把这毫无逻辑的批评写清楚呢<br>载着盒饭的亲爱的小推车就一脸无辜的表情朝着我艰难的推过来了</p><p>春运啊，这是春运啊，人性，人性啊，人性就是应该体谅啊<br>突然获得一种，一切尽在不言中的释放感</p><p>是吧，我们的正义感永远都是那么的优越<br>电脑用多的坏处就是什么都不用脑<br>往往都是未经思考就能得出结论</p><p>这样不好。</p><p>我这也等于尖酸刻薄地数落了一顿我那倒霉的朋友</p><p>这样也不好。</p><p>2012年1月31日<br>于北上的K572</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;乘火车，春运&lt;br&gt;一朋友发消息，关心问道，吃了吗？&lt;/p&gt;
-&lt;p&gt;从中午到傍晚&lt;br&gt;来来回回的小推车&lt;br&gt;也竟然只有瓜子水和水果&lt;br&gt;餐车也堵得可望不可及&lt;/p&gt;
-&lt;p&gt;我便毫不夸张地如是回之&lt;br&gt;怎奈朋友来了一通&lt;br&gt;这什么车啊，这么不人性……&lt;br&gt;我真想说
       
     
     </summary>
