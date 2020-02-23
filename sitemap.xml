@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://liaohuming.com/about/index.html</loc>
+    
+    <lastmod>2020-02-23T03:36:52.005Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://liaohuming.com/2020/02/23/notes/20200223-Latex%E6%B5%8B%E8%AF%95/</loc>
     
     <lastmod>2020-02-23T03:23:18.842Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://liaohuming.com/2020/02/22/notes/20200222-Windows%E7%B3%BB%E7%BB%9F%E4%B8%8B%E9%87%87%E7%94%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91C++%20MPI%E7%A8%8B%E5%BA%8F/</loc>
     
     <lastmod>2020-02-22T14:31:07.577Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://liaohuming.com/about/index.html</loc>
-    
-    <lastmod>2019-11-21T16:49:33.468Z</lastmod>
     
   </url>
   
@@ -135,7 +135,7 @@
   </url>
   
   <url>
-    <loc>http://liaohuming.com/2012/04/09/diary/20120409-%E7%96%B2%E6%83%AB%E7%9A%84%E4%B8%80%E5%A4%A9/</loc>
+    <loc>http://liaohuming.com/2012/04/16/diary/20120416-%E6%84%BF%E4%BB%8A%E5%A4%A9%E7%9A%84%E5%82%BB%E9%80%BC%E4%BC%9A%E6%88%90%E4%B8%BA%E6%98%8E%E6%97%A5%E7%9A%84%E5%BC%A5%E8%B6%B3%E7%8F%8D%E8%B4%B5/</loc>
     
     <lastmod>2016-07-28T02:42:58.000Z</lastmod>
     
@@ -149,6 +149,13 @@
   </url>
   
   <url>
+    <loc>http://liaohuming.com/2012/04/09/diary/20120409-%E7%96%B2%E6%83%AB%E7%9A%84%E4%B8%80%E5%A4%A9/</loc>
+    
+    <lastmod>2016-07-28T02:42:58.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://liaohuming.com/2012/01/31/diary/20120131-%E6%88%91%E7%9C%9F%E6%83%B3%E8%AF%B4%E4%BD%A0/</loc>
     
     <lastmod>2016-07-28T02:42:58.000Z</lastmod>
@@ -156,7 +163,7 @@
   </url>
   
   <url>
-    <loc>http://liaohuming.com/2012/04/16/diary/20120416-%E6%84%BF%E4%BB%8A%E5%A4%A9%E7%9A%84%E5%82%BB%E9%80%BC%E4%BC%9A%E6%88%90%E4%B8%BA%E6%98%8E%E6%97%A5%E7%9A%84%E5%BC%A5%E8%B6%B3%E7%8F%8D%E8%B4%B5/</loc>
+    <loc>http://liaohuming.com/2011/03/24/notes/20110324-UG%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E4%B8%AD%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E3%80%81UG%E7%89%88%E6%9C%AC%E3%80%81%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E7%AD%89%E9%97%AE%E9%A2%98%E5%8F%8A%E5%AE%9E%E4%BE%8B/</loc>
     
     <lastmod>2016-07-28T02:42:58.000Z</lastmod>
     
@@ -164,13 +171,6 @@
   
   <url>
     <loc>http://liaohuming.com/2012/03/01/diary/20120301-%E5%9D%9A%E5%BC%BA%E4%B8%8E%E8%84%86%E5%BC%B1/</loc>
-    
-    <lastmod>2016-07-28T02:42:58.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://liaohuming.com/2011/03/24/notes/20110324-UG%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E4%B8%AD%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E3%80%81UG%E7%89%88%E6%9C%AC%E3%80%81%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E7%AD%89%E9%97%AE%E9%A2%98%E5%8F%8A%E5%AE%9E%E4%BE%8B/</loc>
     
     <lastmod>2016-07-28T02:42:58.000Z</lastmod>
     
