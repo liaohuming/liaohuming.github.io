@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Huming</title>
   
-  <subtitle>日拱一卒，不期而至</subtitle>
+  <subtitle>生活是一种慢，慢慢就会懂</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://liaohuming.com/"/>
@@ -160,8 +160,8 @@
   
   <entry>
     <title>我真想说你XX</title>
-    <link href="http://liaohuming.com/2012/01/31/20120131-%E6%88%91%E7%9C%9F%E6%83%B3%E8%AF%B4%E4%BD%A0/"/>
-    <id>http://liaohuming.com/2012/01/31/20120131-我真想说你/</id>
+    <link href="http://liaohuming.com/2012/01/31/20120131-%E6%88%91%E7%9C%9F%E6%83%B3%E8%AF%B4%E4%BD%A0XX/"/>
+    <id>http://liaohuming.com/2012/01/31/20120131-我真想说你XX/</id>
     <published>2012-01-31T12:47:31.000Z</published>
     <updated>2020-02-23T04:33:17.909Z</updated>
     
