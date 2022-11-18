@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>water_landing_mt时间步计算代码分析 | Huming</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">water_landing_mt时间步计算代码分析</h1><a id="logo" href="/.">Huming</a><p class="description">生活是一种慢，慢慢就会懂</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">water_landing_mt时间步计算代码分析</h1><div class="post-meta">Aug 23, 2017<span> | </span><span class="category"><a href="/categories/笔记/">笔记</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2017/08/23/20170823-waterlanding mt版本时间步计算/" href="/2017/08/23/20170823-waterlanding mt版本时间步计算/#disqus_thread"></a><div class="post-content"><h3 id="时间步计算"><a href="#时间步计算" class="headerlink" title="时间步计算"></a>时间步计算</h3><blockquote>
+<p>configure.dat输入参数：</p>
+<ul>
+<li>fluid（水）<ul>
+<li>Density (kg/m^3) : 1000</li>
+<li>Bulk modulus (Pa) : 220000</li>
+</ul>
+</li>
+<li>float（浮筒）<ul>
+<li>Density (kg/m^3) : 6000</li>
+<li>Elastic modulus (Pa): 1.5e12</li>
+<li>Thickness (m): 0.01</li>
+</ul>
+</li>
+<li>gas（浮筒内空气）<ul>
+<li>Density (kg/m^3) : 12.6</li>
+<li>Initial pressure (Pa): 120000</li>
+</ul>
+</li>
+<li>strip（绑带）<ul>
+<li>Density (kg/m^3): 3500</li>
+<li>Elastic modulus (Pa): 1.5e9</li>
+<li>Thickness (m): 0.01</li>
+</ul>
+</li>
+<li>dt（CFL stable condition）<ul>
+<li>dt = 0.1</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>按照介质中波速的计算公式，手动计算得到的结果为：</p>
+<p>$wave_{fluid}=\sqrt{\frac{Bulk}{\rho}}=\sqrt{\frac{220000}{1000}}=14.8324 m/s=14832.4mm/s$</p>
+<p>$wave_{gas}=\sqrt{\frac{Bulk}{\rho}}=\sqrt{\frac{120000}{12.6}}=14.8324 m/s=97.59m/s=97590mm/s$</p>
+<p>$wave_{float}=\sqrt{\frac{E}{\rho}}=\sqrt{\frac{1.5e12}{6000}}=1.58114e4 m/s=1.58114e7mm/s$</p>
+<p>$wave_{strip}=\sqrt{\frac{E}{\rho}}=\sqrt{\frac{1.5e9}{3500}}=654.64 m/s=654654mm/s$</p>
+<p>code中进行了单位转换，实际用于计算的单位为mm，并且在计算浮筒和绑带波速时，杨氏模量乘以了相应的thickness=0.01，因此：</p>
+<p>$wave_{fluid}=\sqrt{\frac{Bulk}{\rho}}=\sqrt{\frac{220000}{1000}}=14.8324 m/s=14832.4mm/s$</p>
+<p>$wave_{gas}=\sqrt{\frac{Bulk}{\rho}}=\sqrt{\frac{120000}{12.6}}=14.8324 m/s=97.59m/s=97590mm/s$</p>
+<p>$wave_{float}=\sqrt{\frac{E}{\rho}}=\sqrt{\frac{1.5e12 \times 0.01}{6000}}=1.58114e3 m/s=1.58114e6mm/s$</p>
+<p>$wave_{strip}=\sqrt{\frac{E}{\rho}}=\sqrt{\frac{1.5e9 \times 0.01}{3500}}=65.464 m/s=65465.4mm/s$</p>
+<p>这与cmdline输出的wavespeed一致，即：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Minimal element size: <span class="number">0.0124994</span> (m)</span><br><span class="line">Time step (s) : 7.90533e-07</span><br><span class="line">Wavespeed: fluid=<span class="number">14832.4</span>; airplane=<span class="number">25000</span>; gas=<span class="number">97590</span>; membrane=<span class="number">25000</span>; <span class="keyword">float</span>=<span class="number">1.58114e+06</span>; strip=<span class="number">65465.4</span><span class="comment">//此处的Wavespeed的单位是mm/s</span></span><br></pre></td></tr></table></figure>
+<p>现在按cmdline输出的参数来计算code里的timestep：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> unit_factor = <span class="number">1.0e3</span>;</span><br><span class="line">Cs *= unit_factor; <span class="comment">// Cs = 25 * 1000 = 25000 mm/s</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> C_fluid = <span class="built_in">sqrt</span>(Bulk_fluid/rho_fluid); <span class="comment">//14832.4 mm/s</span></span><br><span class="line"><span class="keyword">double</span> C_gas = <span class="built_in">sqrt</span>(Bulk_gas/rho_gas); <span class="comment">//97590 mm/s</span></span><br><span class="line"><span class="keyword">double</span> C_float = <span class="built_in">sqrt</span>(E_float/rho_float); <span class="comment">//1.58114e6 mm/s</span></span><br><span class="line"><span class="keyword">double</span> C_strip = <span class="built_in">sqrt</span>(E_strip/rho_strip); <span class="comment">//65465.4 mm/s</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> wavespeed = C_fluid &gt; Cs ? C_fluid : Cs;	<span class="comment">// wavespeed = Cs = 25000 mm/s</span></span><br><span class="line"><span class="keyword">if</span> ( pFloat != <span class="literal">NULL</span> ) &#123;</span><br><span class="line">  wavespeed = wavespeed &gt; C_gas ? wavespeed : C_gas; <span class="comment">// wavespeed = C_gas =97590 mm/s</span></span><br><span class="line">  wavespeed = wavespeed &gt; C_float ? wavespeed : C_float; <span class="comment">// wavespeed = C_float =1.58114e6 mm/s</span></span><br><span class="line">  wavespeed = wavespeed &gt; C_strip ? wavespeed : C_strip; <span class="comment">// wavespeed = wavespeed =1.58114e6 mm/s</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dt *= hc / wavespeed; <span class="comment">// dt = 0.1, hc =12.4994 mm</span></span><br></pre></td></tr></table></figure>
+<p>按照上述波速：</p>
+<p>$wave_{float}&gt;wave_{gas}&gt;wave_{strip}&gt;wave_{airplane}=wave_{membrane}&gt;wave_{fluid}$</p>
+<p>$d_t = dt \times \frac{hc}{wave_{float}} = 0.1 \times \frac{0.0124994 \times 1000}{1.58114e6}=7.90533 \times 10^{-7}$</p>
+<p>这与cmdline输出的结果是一致的。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>存在的问题是计算浮筒和绑带的波速时为何要将其杨氏模量乘以thickness，不乘以thickness的话它们的波速应该大10倍：$wave_{float}=1.58114e7mm/s$，$wave_{strip}=654654mm/s$，进而时间步会缩小10倍：</p>
+<p>$$<br>d_t = dt \times \frac{hc}{wave_{float}} = 0.1 \times \frac{0.0124994 \times 1000}{1.58114e7}=7.90533 \times 10^{-8}<br>$$</p>
+<ul>
+<li>thickness的作用是什么？</li>
+<li>code中单位换算、时间步计算以及cmdline中输出信息的代码实现比较乱；</li>
+<li>不过感觉时间步不是主要的问题，从测试结果来看，浮筒材料和绑带材料的变形还不太正确，可能需要将绑带的材料属性增加进去。</li>
+</ul>
+</div><div class="tags"><a href="/tags/OTM/">OTM</a></div><div class="post-nav"><a class="pre" href="/2017/08/29/20170829-What does arg inf sup mean/">What does &quot;arg inf sup&quot; mean?</a><a class="next" href="/2017/06/12/20170612-OTM代码学习笔记/">OTM代码学习笔记</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论 「请确保 disqus.com 可以正常加载」</button></div><script>var disqus_shortname = 'liaohuming';
+var disqus_identifier = '2017/08/23/20170823-waterlanding mt版本时间步计算/';
+var disqus_title = 'water_landing_mt时间步计算代码分析';
+var disqus_url = 'http://liaohuming.com/2017/08/23/20170823-waterlanding mt版本时间步计算/';
+$('.btn_click_load').click(function() {
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+  $('.btn_click_load').css('display','none');
+});
+$.ajax({
+  url: 'https://disqus.com/next/config.json',
+  timeout: 3000,
+  type: 'GET',
+  success: (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    $('.btn_click_load').css('display','none');
+  })(),
+  error: function() {
+    $('.btn_click_load').css('display','block');
+  }
+});</script><script id="dsq-count-scr" src="//liaohuming.disqus.com/count.js" async></script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2022/04/20/20220420-Git使用笔记/">Git使用笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/23/20200223-Definition of kinds of boundary conditions/">Definition of kinds of boundary conditions</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/22/20200222-Windows系统下采用命令行编译C++ MPI程序/">Windows系统下采用命令行编译C++ MPI程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/20180306-大道平直努力向前/">大道平直，努力向前</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/12/20171212-Linux下安装paraview和totalview日志/">Linux下安装paraview和totalview</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/20171019-显式时间积分与隐式时间积分/">显式时间积分与隐式时间积分的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/06/20170906-Apache安装日志/">Apache安装日志</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/20170829-What does arg inf sup mean/">What does "arg inf sup" mean?</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/23/20170823-waterlanding mt版本时间步计算/">water_landing_mt时间步计算代码分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/12/20170612-OTM代码学习笔记/">OTM代码学习笔记</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://liaohuqiu.net/" title="Srain" target="_blank">Srain</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/." rel="nofollow">Huming.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

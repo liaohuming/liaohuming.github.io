@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>命令行多参数解析时getopt()函数的使用方法小结 | Huming</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">命令行多参数解析时getopt()函数的使用方法小结</h1><a id="logo" href="/.">Huming</a><p class="description">生活是一种慢，慢慢就会懂</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">命令行多参数解析时getopt()函数的使用方法小结</h1><div class="post-meta">Feb 1, 2016<span> | </span><span class="category"><a href="/categories/笔记/">笔记</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/02/01/20160201-命令行多参数解析时getopt()函数的使用方法小结/" href="/2016/02/01/20160201-命令行多参数解析时getopt()函数的使用方法小结/#disqus_thread"></a><div class="post-content"><p>在Linux中，用命令行执行可执行文件时，常常涉及到：<strong>大量、不同类型、不同形式的</strong> 输入参数问题。从简单的说起，现在假设有我们一个用户定义的可执行程序，名为<code>test.sh</code>，它需要3个输入参数，于是我们通过命令行去执行它的时候，往往通过如下的做法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./test.sh <span class="number">1</span> <span class="number">2</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h3 id="一-main函数"><a href="#一-main函数" class="headerlink" title="一. main函数"></a>一. main函数</h3><p>上面的<code>./test.sh</code>是执行程序，<code>1、2、3</code>是<code>test.sh</code>的输入参数，这些命令项通过传递给程序的main函数进行处理，main函数的一般形式如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>;</span><br></pre></td></tr></table></figure>
+<p>argc是一个整型，argv是一个指针数组，argc记录argv的大小，例如<code>./test.sh 1 2 3</code>将被以如下的方式传递：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">argc=<span class="number">4</span>；</span><br><span class="line">argv[<span class="number">0</span>]=./test.sh;</span><br><span class="line">argv[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">argv[<span class="number">2</span>]=<span class="number">2</span>;</span><br><span class="line">argv[<span class="number">3</span>]=<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="二-getopt函数"><a href="#二-getopt函数" class="headerlink" title="二. getopt函数"></a>二. getopt函数</h3><p>现在我们考虑更复杂一些的输入要求，还是以<code>test.sh</code>为例，不过这时它的输入参数要更多一些了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./test.sh <span class="number">-1</span> <span class="number">-2</span> <span class="number">-3</span> -a <span class="number">4</span> -b <span class="number">5</span> -c <span class="number">6</span> -Q -S -T  <span class="comment">// 此处仅作为示例，还可以有更多更复杂参数，见后续实例</span></span><br></pre></td></tr></table></figure>
+<p>先说说这一行参数表示什么意思，这里的破折号<code>-</code>表示这是一个控制选项，例如<code>-1</code>，在此处1是单字符选项，而<code>-a 4</code>表示带参数的选项，a是该选项的标识符，4是随同该选项一同传入的参数，<code>-Q</code>，与<code>-1</code>一样，Q也是单字符选项，没有随同的输入参数。通过定义不同的选项，我们可以在<code>test.sh</code>中定义丰富的操作完成各种各样的计算任务，但是这个时候main函数可没有办法给你完成上面的解析工作，main函数只是将<code>./test.sh -1 -2 -3 -a 4 -b 5 -c 6 -Q -S -T</code>传递进来，保存在argc和argv里，至于这些参数如何分配并对应什么操作则是需要用户自行定义了，当然，自己写解析函数是可行的，但是有更好的选择。</p>
+<p>在C语言中，<code>unistd.h</code>提供的<code>getopt()</code>这个函数，结合<code>switch</code>语句，可以帮助我们方便实现参数解析。</p>
+<p>先看例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">……</span><br><span class="line"><span class="keyword">int</span> opt;</span><br><span class="line">  <span class="keyword">while</span> ( (opt=getopt(argc, argv, <span class="string">"123a:b:c:QST"</span>)) != <span class="number">-1</span> ) </span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">switch</span> (opt) </span><br><span class="line">    &#123;</span><br><span class="line">     <span class="keyword">case</span> <span class="string">'1'</span>:</span><br><span class="line">      para1 = <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'2'</span>:</span><br><span class="line">      para2 = <span class="number">2</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'3'</span>:</span><br><span class="line">      para3 = <span class="number">3</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'a'</span>:</span><br><span class="line">      para4 = atof(optarg);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'b'</span>:</span><br><span class="line">      para4 = atof(optarg);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'c'</span>:</span><br><span class="line">      para5 = atof(optarg);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'Q'</span>:</span><br><span class="line">      definedOption1 = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'S'</span>:</span><br><span class="line">      definedOption2 = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'T'</span>:</span><br><span class="line">      definedOption3 = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">	……</span><br><span class="line">	&#125;</span><br><span class="line">	……</span><br><span class="line">  &#125;</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
+<p>getopt()函数原型为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getopt</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * <span class="keyword">const</span> argv[], <span class="keyword">const</span> <span class="keyword">char</span> *optstring)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>使用getopt函数需要包含以下头文件:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;getopt.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>有几个全局变量与getopt函数解析参数有关:<br>optind：int型， 指示下一个要解析的参数位置，初始时为1。<br>optarg：char *， 必须接参数的选项元素的参数， optarg 就指向参数字符串。<br>opterr： int 型， 设为0将不打印错误信。</p>
+<p><code>int argc, char * const argv[]</code>一般是直接通过读取main函数的argc和argv，而optstring则是用户定义的选项字符，例如在上面的例子中，optstring是 <code>123a:b:c:QST</code> ，它用来解析输入参数<code>./test.sh -1 -2 -3 -a 4 -b 5 -c 6 -Q -S -T</code>，并且是由用户定义。</p>
+<p>字符串optstring的元素一般可分为下面几种：</p>
+<ul>
+<li>单个字符，表示选项，<code>123a:b:c:QST</code>中的1、2、3、Q、S、T都是单字符选项</li>
+<li>单个字符后接一个冒号<code>:</code>表示该选项后必须跟一个参数。参数紧跟在选项后以空格隔开。该参数的指针赋给optarg。<code>123a:b:c:QST</code>中的<code>a:</code>, <code>b:</code>, <code>c:</code> 都表示它们需要附加指定输入参数，这就是为什么在输入参数时是<code>-a 4 -b 5 -c 6</code>的缘故</li>
+<li>单个字符后跟两个冒号<code>::</code>表示该选项后<strong>可选地</strong>跟一个参数。参数必须紧跟在选项后不能以空格隔开。该参数的指针赋给optarg。（这个特性是GNU的扩张，本例中不作介绍）。</li>
+</ul>
+<p><em>update@2016年5月17日17:11:51</em><br>一个选项的识别符号只能是单个字符（或加上与一个冒号<code>:</code>或两个冒号<code>::</code>的组合），不能用多个字符来表示一个选项。<br>例如这样做就会识别出错：<br>用户输入的参数<code>./test.sh -1 -2 -3 -a1 4 -b 5 -c 6 -Q -S -T</code>，那么它对应的optstring则是 <code>123a1:b:c:QST</code>，显然其中<code>a1</code>为两个字符，想让它表示一个选项，是会出现问题的。</p>
+<p>同时，getopt()在unistd.h中的相关定义：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">* <span class="keyword">extern</span> <span class="keyword">char</span> *optarg;  <span class="comment">//选项的参数指针</span></span><br><span class="line">* <span class="keyword">extern</span> <span class="keyword">int</span> optind,    <span class="comment">//下一次调用getopt的时，从optind存储的位置处重新开始检查选项。 </span></span><br><span class="line">* <span class="keyword">extern</span> <span class="keyword">int</span> opterr,    <span class="comment">//当opterr=0时，getopt不向stderr输出错误信息。</span></span><br><span class="line">* <span class="keyword">extern</span> <span class="keyword">int</span> optopt;    <span class="comment">//当命令行选项字符不包括在optstring中或者选项缺少必要的参数时,</span></span><br><span class="line">                        <span class="comment">//该选项存储在optopt中，getopt返回'?'</span></span><br></pre></td></tr></table></figure>
+<p>那么现在就清楚用户输入的参数<code>./test.sh -1 -2 -3 -a 4 -b 5 -c 6 -Q -S -T</code>是怎么进行传递和解析的了：</p>
+<ul>
+<li>通过main函数将输入参数<code>./test.sh -1 -2 -3 -a 4 -b 5 -c 6 -Q -S -T</code>保存在argc和argv</li>
+<li>getopt()按照<code>123a:b:c:QST</code>这个规则去解析argc和argv中保存的数据</li>
+<li>例如，首先去<code>./test.sh -1 -2 -3 -a 4 -b 5 -c 6 -Q -S -T</code>读取到的选项是<code>-1</code>（第一个输入参数./test.sh是执行程序是名称不予考虑），于是就去<code>123a:b:c:QST</code>中检查是否有<code>1</code>这个选项，有的话就返回该选项（这个时候就会转入相应的case执行对应的操作），同时将选项索引optind更新为输入参数的下一个位置(此处为<code>-2</code>的位置)作为下次搜索的开始位置，如果在optstring里没有找到<code>1</code>，例如我们的optstring是<code>23a:b:c:QST</code>，即当命令行选项字符不包括在optstring中或者选项缺少必要的参数时，该选项存储在optopt中，getopt返回<code>&#39;?&#39;</code>，并从optind开始进行下一个输入参数的解析</li>
+<li><p>继续解析，当解析到<code>-a</code>时，这个时候getopt()发现optstring里的<code>a</code>后面跟着<code>:</code>于是它知道a是还需要传递进来一个指定的参数，于是就将指针*optarg指向-a后面的一个参数即是4，这样返回选项a的时候，a所对应的参数值此时由optarg指向，这样转入<code>case &#39;a&#39;</code>的时候就可以对该参数进行相应的操作了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">'a'</span>:</span><br><span class="line">  para4 = atof(optarg);</span><br><span class="line">  <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接着往下走，-Q -S -T与前面的-1是一样的，都是不带参数的单字符选择，当检查完-T后，返回-1，表示检查完毕，这个时候就完成了对<code>./test.sh -1 -2 -3 -a 4 -b 5 -c 6 -Q -S -T</code>中所有参数的分配工作。</p>
+</li>
+</ul>
+<p>上述简单介绍了命令行多参数解析时getopt()函数的用法，若有错误，欢迎斧正与探讨；若干概念引自文献[1]，若有需要相关概念更详细的解释，可前往阅读。</p>
+<h3 id="三-实例"><a href="#三-实例" class="headerlink" title="三. 实例"></a>三. 实例</h3><p>在Eureka中进行的FSI数值算例中用到如下控制选项，整理出来作为备忘。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入</span><br><span class="line">./$<span class="number">1</span> <span class="number">-2</span> -L <span class="number">290</span> -H <span class="number">120</span> -J <span class="number">0.1</span> -h <span class="number">8.0</span> -D <span class="number">500</span> -r <span class="number">1.5</span> -c <span class="number">1.0e-5</span> -x <span class="number">3.1</span> -b <span class="number">1.6</span> -q <span class="number">1</span> -R <span class="number">1</span> -M <span class="number">0.01</span> </span><br><span class="line">-U -Q -t <span class="number">0.1</span> -T <span class="number">0.1</span> -d <span class="number">1000</span> -v <span class="number">513</span> -f <span class="number">1</span> -G <span class="number">1.0e7</span> -k <span class="number">1.42e5</span> -p <span class="number">1.18e-6</span> -g <span class="number">1.4</span> -m <span class="number">0</span> -s <span class="number">1.82e-5</span> </span><br><span class="line">-i <span class="number">0.1</span> -l <span class="number">10.0</span> -I <span class="number">0.0</span> -A <span class="number">0.0</span> -E <span class="number">2.5e6</span> -P <span class="number">1e-4</span> -N <span class="number">0.35</span> -n <span class="number">8</span> -K <span class="number">10.0</span></span><br><span class="line"></span><br><span class="line">解析</span><br><span class="line">getopt(argc, argv, <span class="string">"23L:H:W:J:h:D:r:c:x:b:q:R:M:SQUt:T:d:v:f:G:k:p:g:m:s:i:l:I:A:E:P:N:n:K:"</span>);</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th><strong>控制符</strong></th>
+<th><strong>值</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>./$1</td>
+<td></td>
+<td>执行程序名称，e.g. verification_oscillation_structure.gcc_v714M.st</td>
+<td></td>
+</tr>
+<tr>
+<td>-2</td>
+<td>2</td>
+<td>二维</td>
+<td></td>
+</tr>
+<tr>
+<td>-3</td>
+<td>3</td>
+<td>三维</td>
+<td></td>
+</tr>
+<tr>
+<td>-L</td>
+<td>290</td>
+<td>Length</td>
+<td></td>
+</tr>
+<tr>
+<td>-H</td>
+<td>120</td>
+<td>Height</td>
+<td></td>
+</tr>
+<tr>
+<td>-W</td>
+<td>0</td>
+<td>Width</td>
+<td></td>
+</tr>
+<tr>
+<td>-J</td>
+<td>0.1</td>
+<td>critical_shear/maximum shear strain</td>
+<td></td>
+</tr>
+<tr>
+<td>-h</td>
+<td>8</td>
+<td>element size that determines the patch thickness 入口单元尺寸</td>
+<td></td>
+</tr>
+<tr>
+<td>-D</td>
+<td>500</td>
+<td>Domain_End 计算域终点，计算域起点为0.0</td>
+<td></td>
+</tr>
+<tr>
+<td>-r</td>
+<td>1.5</td>
+<td>searchRange, parameters for the shape function</td>
+<td></td>
+</tr>
+<tr>
+<td>-c</td>
+<td>1.0e-5</td>
+<td>cutoff, parameters for the shape function</td>
+<td></td>
+</tr>
+<tr>
+<td>-x</td>
+<td>3.1</td>
+<td>extension, parameters for the shape function</td>
+<td></td>
+</tr>
+<tr>
+<td>-b</td>
+<td>1.6</td>
+<td>beta, parameters for the shape function</td>
+<td></td>
+</tr>
+<tr>
+<td>-q</td>
+<td>1</td>
+<td>integration_order q=1表示单元的中心插入1个质量点</td>
+<td></td>
+</tr>
+<tr>
+<td>-R</td>
+<td>1</td>
+<td>nRing 邻域控制，1表示从单元本身节点开始，如果变形大，可以设置为2</td>
+<td></td>
+</tr>
+<tr>
+<td>-M</td>
+<td>0.01</td>
+<td>mass_factor</td>
+<td></td>
+</tr>
+<tr>
+<td>-S</td>
+<td>true</td>
+<td>adaptive_search</td>
+<td></td>
+</tr>
+<tr>
+<td>-Q</td>
+<td>true</td>
+<td>adaptive_beta</td>
+<td></td>
+</tr>
+<tr>
+<td>-U</td>
+<td>true</td>
+<td>updateNeighbor</td>
+<td></td>
+</tr>
+<tr>
+<td>-t</td>
+<td>0.1</td>
+<td>time step ratio 0.1表示10%</td>
+<td></td>
+</tr>
+<tr>
+<td>-T</td>
+<td>0.1</td>
+<td>total_time simulation time</td>
+<td></td>
+</tr>
+<tr>
+<td>-d</td>
+<td>1000</td>
+<td>dump，number of time steps to visualize the results</td>
+<td></td>
+</tr>
+<tr>
+<td>-v</td>
+<td>513</td>
+<td>max velocity of inflow，speed</td>
+<td></td>
+</tr>
+<tr>
+<td>-f</td>
+<td>1.0</td>
+<td>parameters for the rupture of solids，epsilon_h=1 包含裂纹扩展</td>
+<td></td>
+</tr>
+<tr>
+<td>-G</td>
+<td>1.0e7</td>
+<td>parameters for the rupture of solids</td>
+<td></td>
+</tr>
+<tr>
+<td>-k</td>
+<td>1.42e5</td>
+<td>the bulk modulus of fluid (2.1e9 Pa for water) 体积模量</td>
+<td></td>
+</tr>
+<tr>
+<td>-p</td>
+<td>1.18e-6</td>
+<td>the density of fluid (1.0e3 kg/m^3 for water)</td>
+<td></td>
+</tr>
+<tr>
+<td>-g</td>
+<td>1.4</td>
+<td>Gruneisen parameter in the equation of state of the fluid</td>
+<td></td>
+</tr>
+<tr>
+<td>-m</td>
+<td>0</td>
+<td>nuf，poisson’s ratio of the fluid</td>
+<td></td>
+</tr>
+<tr>
+<td>-s</td>
+<td>1.82e-5</td>
+<td>the shear viscosity coefficient of fluid (1.82e-5kg/(m.s))动力粘度</td>
+<td></td>
+</tr>
+<tr>
+<td>-i</td>
+<td>0.1</td>
+<td>artificial viscosity coefficient to stablize the simulation 经验系数</td>
+<td></td>
+</tr>
+<tr>
+<td>-l</td>
+<td>10</td>
+<td>artificial viscosity coefficient to stablize the simulation 经验系数</td>
+<td></td>
+</tr>
+<tr>
+<td>-I</td>
+<td>0.0</td>
+<td>artificial viscosity coefficient to stablize the simulation 经验系数</td>
+<td></td>
+</tr>
+<tr>
+<td>-A</td>
+<td>0.0</td>
+<td>artificial viscosity coefficient to stablize the simulation 经验系数</td>
+<td></td>
+</tr>
+<tr>
+<td>-E</td>
+<td>2.5e6</td>
+<td>E_Solid，Young’s modulus of solid 固体材料弹性模量</td>
+<td></td>
+</tr>
+<tr>
+<td>-P</td>
+<td>1.0e-4</td>
+<td>rho_Solid，density of solid 固体材料密度</td>
+<td></td>
+</tr>
+<tr>
+<td>-N</td>
+<td>0.35</td>
+<td>nu_Solid，Poisson’s ratio of solid 固体材料泊松比</td>
+<td></td>
+</tr>
+<tr>
+<td>-n</td>
+<td>8</td>
+<td>number of threads 线程数</td>
+<td></td>
+</tr>
+<tr>
+<td>-K</td>
+<td>10</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="四-参考文献"><a href="#四-参考文献" class="headerlink" title="四. 参考文献"></a>四. 参考文献</h3><p>[1] <a href="http://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html#Using-Getopt" target="_blank" rel="noopener">http://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html#Using-Getopt</a></p>
+<p>2016年2月1日16:18:12<br>于克利夫兰</p>
+</div><div class="tags"><a href="/tags/C/">C++</a></div><div class="post-nav"><a class="pre" href="/2016/02/05/20160206-关于读书的随想/">关于读书的随想</a><a class="next" href="/2016/01/21/20160121-我所理解的C++类设计中private成员变量和返回const引用类型/">我所理解的C++类设计中private成员变量和返回const引用类型</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论 「请确保 disqus.com 可以正常加载」</button></div><script>var disqus_shortname = 'liaohuming';
+var disqus_identifier = '2016/02/01/20160201-命令行多参数解析时getopt()函数的使用方法小结/';
+var disqus_title = '命令行多参数解析时getopt()函数的使用方法小结';
+var disqus_url = 'http://liaohuming.com/2016/02/01/20160201-命令行多参数解析时getopt()函数的使用方法小结/';
+$('.btn_click_load').click(function() {
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+  $('.btn_click_load').css('display','none');
+});
+$.ajax({
+  url: 'https://disqus.com/next/config.json',
+  timeout: 3000,
+  type: 'GET',
+  success: (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    $('.btn_click_load').css('display','none');
+  })(),
+  error: function() {
+    $('.btn_click_load').css('display','block');
+  }
+});</script><script id="dsq-count-scr" src="//liaohuming.disqus.com/count.js" async></script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2022/04/20/20220420-Git使用笔记/">Git使用笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/23/20200223-Definition of kinds of boundary conditions/">Definition of kinds of boundary conditions</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/22/20200222-Windows系统下采用命令行编译C++ MPI程序/">Windows系统下采用命令行编译C++ MPI程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/20180306-大道平直努力向前/">大道平直，努力向前</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/12/20171212-Linux下安装paraview和totalview日志/">Linux下安装paraview和totalview</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/20171019-显式时间积分与隐式时间积分/">显式时间积分与隐式时间积分的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/06/20170906-Apache安装日志/">Apache安装日志</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/20170829-What does arg inf sup mean/">What does "arg inf sup" mean?</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/23/20170823-waterlanding mt版本时间步计算/">water_landing_mt时间步计算代码分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/12/20170612-OTM代码学习笔记/">OTM代码学习笔记</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://liaohuqiu.net/" title="Srain" target="_blank">Srain</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/." rel="nofollow">Huming.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
