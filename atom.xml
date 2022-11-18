@@ -262,15 +262,15 @@
     <link href="http://liaohuming.com/2017/06/12/20170612-OTM%E4%BB%A3%E7%A0%81%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://liaohuming.com/2017/06/12/20170612-OTM代码学习笔记/</id>
     <published>2017-06-12T13:01:23.000Z</published>
-    <updated>2022-11-18T11:49:00.347Z</updated>
+    <updated>2022-11-18T13:53:02.575Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="2017年6月12日21-52-39"><a href="#2017年6月12日21-52-39" class="headerlink" title="2017年6月12日21:52:39"></a>2017年6月12日21:52:39</h2><p>Linux下3种提交计算任务的方式：<br>(1) 直接提交，例如：/submit.sh vos.gcc_v714M.st<br>(2) 直接提交，将计算过程中的输出信息保存到一个文件中，例如：./submit.sh vos.gcc_v714M.st &amp;&gt; output，用这种方式提交后，计算过程中输出的信息都被保存在output中，可以通过再打开一个命令窗口，用：tail -f output命令来查看<br>(3) 后台计算，例如：nohup ./submit.sh vos.gcc_v714M.st &amp;</p><p>在OTM中<br>(1) Euclidean::Orthonormal::Point，代表没有边界条件的点<br>(2) Euclidean::Cartesian::Point，代表有边界条件的点<br>(3) ModelBuilder.cpp在目录：Eureka_dist\patches\factoryPattern\下<br>(4) PatchBackNodes的生成方式：分为Initialzation和InsertPatch</p><pre><code>* Initialzation：首先拷贝frontNodes，这些frontNodes往x轴方向变动translation距离，形成PatchBackNodes，而PatchBackNodes与frontNodes的连接关系采用vtkDelaunay2Eureka进行初始化，用这两列点重新建立了一层的mesh，即形成新的cell* InsertPatch：初始化之后，后续再插入新的patchNodes采用reflecttion的方式，被reflect的点与原来的点的连接关系是已知的，因此新得到点将按照这样的连接关系形成新的mesh（视频中67分钟：20170612-blasius平板边界层边界条件改进.exe）</code></pre>]]></content>
+    <content type="html"><![CDATA[<p>Linux下3种提交计算任务的方式：<br>(1) 直接提交，例如：/submit.sh vos.gcc_v714M.st<br>(2) 直接提交，将计算过程中的输出信息保存到一个文件中，例如：./submit.sh vos.gcc_v714M.st &amp;&gt; output，用这种方式提交后，计算过程中输出的信息都被保存在output中，可以通过再打开一个命令窗口，用：tail -f output命令来查看<br>(3) 后台计算，例如：nohup ./submit.sh vos.gcc_v714M.st &amp;</p><p>在OTM中<br>(1) Euclidean::Orthonormal::Point，代表没有边界条件的点<br>(2) Euclidean::Cartesian::Point，代表有边界条件的点<br>(3) ModelBuilder.cpp在目录：Eureka_dist\patches\factoryPattern\下<br>(4) PatchBackNodes的生成方式：分为Initialzation和InsertPatch</p><pre><code>* Initialzation：首先拷贝frontNodes，这些frontNodes往x轴方向变动translation距离，形成PatchBackNodes，而PatchBackNodes与frontNodes的连接关系采用vtkDelaunay2Eureka进行初始化，用这两列点重新建立了一层的mesh，即形成新的cell* InsertPatch：初始化之后，后续再插入新的patchNodes采用reflecttion的方式，被reflect的点与原来的点的连接关系是已知的，因此新得到点将按照这样的连接关系形成新的mesh（视频中67分钟：20170612-blasius平板边界层边界条件改进.exe）</code></pre>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;h2 id=&quot;2017年6月12日21-52-39&quot;&gt;&lt;a href=&quot;#2017年6月12日21-52-39&quot; class=&quot;headerlink&quot; title=&quot;2017年6月12日21:52:39&quot;&gt;&lt;/a&gt;2017年6月12日21:52:39&lt;/h2&gt;&lt;p&gt;Linux下
+        &lt;p&gt;Linux下3种提交计算任务的方式：&lt;br&gt;(1) 直接提交，例如：/submit.sh vos.gcc_v714M.st&lt;br&gt;(2) 直接提交，将计算过程中的输出信息保存到一个文件中，例如：./submit.sh vos.gcc_v714M.st &amp;amp;&amp;gt; o
       
     
     </summary>
@@ -331,32 +331,6 @@
     
     
       <category term="Linux" scheme="http://liaohuming.com/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>编程过程中的小错误</title>
-    <link href="http://liaohuming.com/2017/04/19/20170419-%E7%BC%96%E7%A8%8B%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%B0%8F%E9%94%99%E8%AF%AF/"/>
-    <id>http://liaohuming.com/2017/04/19/20170419-编程过程中的小错误/</id>
-    <published>2017-04-19T08:19:17.000Z</published>
-    <updated>2022-11-18T11:51:13.783Z</updated>
-    
-    <content type="html"><![CDATA[<ul><li>C++中除号的用法错误，在C++中如果“/”两端皆为整数，那么将执行整除运算，即仅取除法运算中的整数部分（并不会四舍五入），要想做非整除运算，需要在“/”两端接float或者double类型的非整型数据类型，这样“/”将进行非整除运算，如下。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">cos</span>(<span class="number">300</span>/<span class="number">180</span>*<span class="number">3.14159</span>);    <span class="comment">// cos(3.14159)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cos</span>(<span class="number">3.14159</span>*<span class="number">300</span>/<span class="number">180</span>);   <span class="comment">// cos(5.23598)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cos</span>(<span class="number">300.0</span>/<span class="number">180.0</span>*<span class="number">3.14159</span>);   <span class="comment">// cos(5.23598)</span></span><br></pre></td></tr></table></figure></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ul&gt;
-&lt;li&gt;C++中除号的用法错误，在C++中如果“/”两端皆为整数，那么将执行整除运算，即仅取除法运算中的整数部分（并不会四舍五入），要想做非整除运算，需要在“/”两端接float或者double类型的非整型数据类型，这样“/”将进行非整除运算，如下。&lt;figure cl
-      
-    
-    </summary>
-    
-      <category term="笔记" scheme="http://liaohuming.com/categories/%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="C++" scheme="http://liaohuming.com/tags/C/"/>
     
   </entry>
   
@@ -534,6 +508,29 @@
       
         &lt;p&gt;七月的生活可用纯粹、煎熬两个词来概括。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;纯粹&lt;/strong&gt;&lt;br&gt;这段时间美共和党在克利夫兰召开全国代表大会，正值土耳其政变、法国尼斯国庆恐怖袭击、南海仲裁、枪击警察、黑人游行…，各种烽火不息，加之川普支持反对者向来激进狂热的作风，内忧外患
+      
+    
+    </summary>
+    
+      <category term="随笔" scheme="http://liaohuming.com/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>我们都需要改变</title>
+    <link href="http://liaohuming.com/2016/05/01/20160501-%E6%88%91%E4%BB%AC%E9%83%BD%E9%9C%80%E8%A6%81%E6%94%B9%E5%8F%98/"/>
+    <id>http://liaohuming.com/2016/05/01/20160501-我们都需要改变/</id>
+    <published>2016-05-01T01:39:33.000Z</published>
+    <updated>2020-02-23T04:32:23.850Z</updated>
+    
+    <content type="html"><![CDATA[<p>“滑膜肉瘤”事件在网上传播有好些日子了，今早起来看到<strong><a href="http://mp.weixin.qq.com/s?__biz=MjM5ODIyMTE0MA==&amp;mid=2650968235&amp;idx=1&amp;sn=6c99a7f680af5679215ae09351bf9f1d&amp;scene=25#wechat_redirect" target="_blank" rel="noopener">「青年魏则西之死」</a></strong>在微信朋友圈传播了，每次看到这样的消息，心情都很复杂，想表达些什么，却有一种很深的无力感。“滑膜肉瘤”事件只是存在着的千万事件之一，再多想一点就会对这个社会多绝望一些，但是如果人人都不发声，不作为，那就不会有改变。我们都需要改变。</p><p>百度利益至上不客观(甚至错误导向)竞价排名的搜索是推波助澜的邪恶之手、社会上诸多缺乏有效监督的环节是本源。我们的生活环境很糟糕，「假、毒」的「信息、食品、环境」让我们时时刻刻小心翼翼地甄别着日常生活最基本的要素，即便如此也不能保证自己及身边的亲人好友能不受到伤害。当一个社会环境要求生活在其中的社会成员具备苛刻的辨识能力「才有可能」生存，当生存变得如此艰难时，那么这个社会环境是迫切需要改善了，让大家都成为辨识专家来避免不受各种虚假毒害信息的蛊惑终究是治标不治本的方法，<strong>社会中占主导地位的应该是真善美，传播真善美，不作恶不发不义财，是我们每个人心中都该有的一个基本原则。同时一个社会不应该靠社会成员的自律性来维护正常秩序，而应该是通过完善的体制来维护。体制要改善，要有作为。</strong>而现在我能做的，就是不用百度(至少在它变得客观之前不用)、不作恶、传播真善美。诸君共勉。</p><p>@2016年5月1日10:10:16</p><hr><p><strong>「魏则西事件」</strong>所引起广泛的<strong>「讨论，调查，还没有到究责，整改阶段」</strong>这股热潮已与以往无数股「骗、假、毒」热潮一般悄然褪去，禁的禁，删的删，挡也挡不住，拉也拉不回，昨一日还是口诛笔伐震惊网坛，今一日已是歌舞升平天下太平，明一日定是不了了之无人问津矣。不知道此次事件牵涉到的对象会有多少改进。社会的进步，体制的健全，真不是一朝一夕的事情，还是需要遵守客观规律，历史的巨轮前进一小步需要巨大的时间来积累矛盾，积累爆发的能量。</p><p>@2016年5月4日00:50:47</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;“滑膜肉瘤”事件在网上传播有好些日子了，今早起来看到&lt;strong&gt;&lt;a href=&quot;http://mp.weixin.qq.com/s?__biz=MjM5ODIyMTE0MA==&amp;amp;mid=2650968235&amp;amp;idx=1&amp;amp;sn=6c99a7f68
       
     
     </summary>
